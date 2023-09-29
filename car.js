@@ -1,5 +1,5 @@
 class Car{
-    constructor(x, y, width, height) {
+    constructor(x, y, width, height, controlType, maxSpeed=3) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -7,21 +7,27 @@ class Car{
 
         this.speed = 0;
         this.acceleration = 0.5;
-        this.maxSpeed = 5;
+        this.maxSpeed = maxSpeed;
         this.friction = 0.05;
         this.angle = 0;
         this.damaged = false;
+        this.polygon = []
 
-        this.sensors = new Sensors(this);
-        this.controls = new Controls();
+        if(controlType === 'KEYS') {
+            this.sensors = new Sensors(this);
+        }
+        this.controls = new Controls(controlType);
     }
 
-    update(roadBorders) {
+    update(roadBorders, traffic) {
         if(!this.damaged) {
             this.#move();
             this.polygon = this.#createPolygon();
-            this.damaged = this.#assessDamage(roadBorders);
-            this.sensors.update(roadBorders);
+            this.damaged = this.#assessDamage(roadBorders, traffic);
+            
+            if(this.sensors) {
+                this.sensors.update(roadBorders, traffic);
+            }
         }
     }
     
@@ -70,11 +76,11 @@ class Car{
         this.y -= Math.cos(this.angle) * this.speed;
     }
 
-    draw(ctx) {
+    draw(ctx, color='black') {
         if(this.damaged) {
             ctx.fillStyle = 'gray';
         } else {
-            ctx.fillStyle = 'black';
+            ctx.fillStyle = color;
         }
         ctx.beginPath();
         ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
@@ -82,7 +88,10 @@ class Car{
             ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
         }
         ctx.fill();
-        this.sensors.draw(ctx);
+        
+        if(this.sensors) {
+            this.sensors.draw(ctx);
+        }
     }
 
     #createPolygon(){
@@ -109,9 +118,15 @@ class Car{
         return points;
     }
 
-    #assessDamage(roadBorders) {
+    #assessDamage(roadBorders, traffic) {
         for(const border of roadBorders) {
             if(polysIntersect(this.polygon, border)){
+                return true;
+            }
+        }
+
+        for(const car of traffic) {
+            if(polysIntersect(this.polygon, car.polygon)){
                 return true;
             }
         }
