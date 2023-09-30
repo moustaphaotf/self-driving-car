@@ -3,6 +3,9 @@ body{
     background-color: darkgray;
     overflow: hidden;
     text-align: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
 }
 
 #carCanvas{
@@ -11,4 +14,19 @@ body{
 
 #networkCanvas{
     background-color: black;
+}
+
+#verticalButtons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 18px;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    border-radius:  5px;
+    padding: 5px 5px 7px 5px;
+    margin: 2px;
 }
