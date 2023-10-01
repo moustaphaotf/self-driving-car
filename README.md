@@ -2,4 +2,4 @@
 # Video Demo
 
 # Live demo
-[Click here](https://moustaphaotf.github.io/sef-driving-car/index.html)
+[Click here](https://moustaphaotf.github.io/self-driving-car/index.html)
