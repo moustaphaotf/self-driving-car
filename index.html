@@ -2,19 +2,60 @@
 <html>
     <head>
         <title>Self-driving car </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="styles.css">
     </head>
 
     <body>
-        <canvas id="carCanvas"></canvas>
-        <div id="verticalButtons">
-            <span id="carsCount"></span>
-            <span id="distance"></span>
-            <button onclick="save()">Save 💾</button>
-            <button onclick="discard()">Discard 🗑</button>
+        <div class="landscape-prompt">
+            <p id="prompt-text"></p>
         </div>
-        <canvas id="networkCanvas"></canvas>
+        <div id="slidingDiv" class="hidden">
+            <div class="window">
+                <span id="closeButton" class="close-icon">X</span>
+                <div class="modal-content">
+                    <h2 class="modal-title">Self-Driving Car Simulation</h2>
+                    <div class="modal-description">
+                        <p>Bienvenue dans la Simulation de Voiture Autonome, un projet fascinant qui met en valeur les capacités des véhicules autonomes grâce à des visualisations interactives et à l'intelligence artificielle.</p>
+                    </div>
+                    
+                    <h3 class="modal-subtitle">Comment utiliser :</h3>
+                    <ol class="modal-list">
+                        <li>Cliquez sur "Infos" pour afficher des informations sur la simulation.</li>
+                        <li>Observez les voitures contrôlées par l'IA alors qu'elles naviguent de manière autonome sur la route.</li>
+                        <li>Suivez les principales statistiques, telles que le nombre de voitures et les distances totales parcourues.</li>
+                        <li>Utilisez les boutons interactifs pour :
+                            <ul>
+                                <li>"Load" pour charger un modèle préenregistré &#x231B;.</li>
+                                <li>"Discard" pour effacer le modèle préenregistré 🗑.</li>
+                                <li>Si aucun modèle n'est enregistré, vous pouvez entraîner les voitures manuellement et cliquer sur "Save" pour enregistrer votre progression 💾.</li>
+                            </ul>
+                        </li>
+                        <li>N'hésitez pas à redémarrer la simulation à tout moment en cliquant sur "Restart" 🗘.</li>
+                    </ol>
+
+                
+                    <p class="modal-get-started">Découvrez le monde des voitures autonomes et explorez l'avenir des transports.</p>
+                </div>                
+            </div>
+        </div>
+        <div class="app">
+            <canvas id="carCanvas"></canvas>
+            <div>
+                <span id="stats"></span>
+                <div id="verticalButtons">
+                    <button id="showDiv">Infos <span class="infos-icon">ℹ</span></button>
+                    <button onclick="save()">Save 💾</button>
+                    <button onclick="discard()">Discard 🗑</button>
+                    <button onclick="load()">Load &#x231B;</button>
+                    <button onclick="location.reload()">Restart 🗘</button>
+                </div>
+            </div>
+            
+            <canvas id="networkCanvas"></canvas>
+        </div>
         <script src="utils.js"></script>
+        <script src="modal.js"></script>
         <script src="visualizer.js"></script>
         <script src="network.js"></script>
         <script src="sensors.js"></script>

@@ -66,3 +66,26 @@ function getRGBA(value) {
 
     return `rgba(${R}, ${G}, ${B}, ${alpha})`;          
 }
+
+function getRandomColor() {
+    const hue = 290 + Math.random()*260;
+    return `hsl(${hue},100%, 60%)`;
+}
+
+const prompts = {
+    en: "Please rotate your device for a better experience.",
+    fr: "Veuillez tourner votre appareil pour une meilleure expérience.",
+    es: "Gire su dispositivo para una mejor experiencia."
+    // Add more language prompts as needed
+};
+
+// Detect the user's preferred language using Intl
+const userLocale = (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage || 'en';
+
+// Extract the language code (e.g., "en" or "fr")
+const userLanguage = userLocale.split('-')[0];
+
+function setPromptText(locale) {
+    const promptText = prompts[locale] || prompts.en; // Default to English
+    document.getElementById("prompt-text").textContent = promptText;
+}

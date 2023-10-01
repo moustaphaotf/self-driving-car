@@ -1,5 +1,5 @@
 class Car{
-    constructor(x, y, width, height, controlType, maxSpeed=3) {
+    constructor(x, y, width, height, controlType, maxSpeed=3, color='blue') {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -21,6 +21,22 @@ class Car{
             );
         }
         this.controls = new Controls(controlType);
+
+        this.image = new Image();
+        this.image.src = 'car.png';
+
+        this.mask = document.createElement('canvas');
+        this.mask.width = width;
+        this.mask.height = height;
+
+        const maskCtx = this.mask.getContext('2d');
+        this.image.onload = () => {
+            maskCtx.fillStyle = color;
+            maskCtx.rect(0, 0, this.width, this.height);
+            maskCtx.fill();
+            maskCtx.globalCompositeOperation = 'destination-atop';
+            maskCtx.drawImage(this.image, 0, 0, this.width, this.height);
+        }
     }
 
     update(roadBorders, traffic) {
@@ -89,22 +105,35 @@ class Car{
         this.y -= Math.cos(this.angle) * this.speed;
     }
 
-    draw(ctx, color='black', drawSensors=false) {
-        if(this.damaged) {
-            ctx.fillStyle = 'gray';
-        } else {
-            ctx.fillStyle = color;
-        }
-        ctx.beginPath();
-        ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
-        for(let i = 1; i < this.polygon.length; i++) {
-            ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
-        }
-        ctx.fill();
-        
+    draw(ctx, drawSensors=false) {
         if(this.sensors && drawSensors) {
             this.sensors.draw(ctx);
         }
+        
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(-this.angle);
+        
+        if(!this.damaged) {
+            ctx.drawImage(
+                this.mask, 
+                -this.width / 2,
+                -this.height / 2,
+                this.width,
+                this.height
+            );
+        }
+        ctx.globalCompositeOperation = "multiply";
+        ctx.drawImage(
+            this.image, 
+            -this.width / 2,
+            -this.height / 2,
+            this.width,
+            this.height
+        )
+
+        ctx.restore();
+    
     }
 
     #createPolygon(){
